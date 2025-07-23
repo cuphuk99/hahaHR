@@ -46,9 +46,9 @@
   .pair-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 5px;
     flex-wrap: wrap;
-    gap: 15px; /* Відступи між мовними блоками */
+    gap: 10px; /* Відступи між мовними блоками */
   }
 
   .language-block {
@@ -86,7 +86,7 @@
     background-color: #007bff;
     color: white;
     cursor: pointer;
-    margin-top: 30px;
+    margin-top: 20px;
     transition: background-color 0.25s ease;
     user-select: none;
   }
@@ -94,6 +94,147 @@
   button:hover {
     background-color: #0056b3;
   }
+ 
+  .timer-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.timer-block, .button-block {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer-block {
+  padding-right: 10px;
+}
+.button-block {
+  padding-left: 10px;
+}
+
+.circle-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+}
+
+.progress-group {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.ring-background,
+.ring-progress {
+  fill: none;
+  stroke-width: 8;
+}
+
+.ring-background {
+  stroke: #eee;
+}
+
+.ring-progress {
+  stroke: #007bff;
+  stroke-dasharray: 377;
+  stroke-dashoffset: 0;
+}
+
+.timer-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  user-select: none;
+  pointer-events: none;
+}
+
+#start-timer-btn {
+  padding: 16px 24px;
+  font-size: 18px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 110px;
+  min-height: 50px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+#start-timer-btn:hover {
+  background-color: #218838;
+}
+
+
+#language-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+}
+
+.language-options {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.lang-flag {
+  font-size: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  padding: 8px;
+}
+.lang-flag.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  transform: scale(1.1);
+}
+
+#start-app-btn {
+  padding: 12px 20px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#start-app-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#back-to-language-btn {
+  padding: 8px 16px;
+  margin: 10px 0 20px;
+  font-size: 16px;
+  color: black;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#back-to-language-btn:hover {
+  background-color: #e2e6ea;
+}
+
 
   @keyframes fadeInUp {
     to {
@@ -104,6 +245,13 @@
 
   /* Адаптивність */
   @media (max-width: 650px) {
+    .timer-container {
+  width: 100%;
+  max-width: 120px;
+  margin: 0 auto 20px;
+}
+
+
     .language-block {
       width: 100%;
       min-width: auto;
@@ -117,9 +265,48 @@
 </head>
 <body>
 
-<h1>HaHaHuman Resources</h1>
-<div id="pairs-container"></div>
-<button id="new-pairs-btn">Generate</button>
+  <div id="language-selection">
+    <h2>Select languages you want to be displayed in the game</h2>
+    <div class="language-options">
+      <div class="lang-flag" data-lang="ua" title="Українська">🇺🇦</div>
+      <div class="lang-flag" data-lang="en" title="English">🇬🇧</div>
+      <div class="lang-flag" data-lang="sk" title="Slovenský">🇸🇰</div>
+    </div>
+    <button id="start-app-btn" disabled>Почати</button>
+  </div>
+  
+  <!-- Далі буде основна частина сайту -->
+  <div id="main-app" style="display: none;">
+
+    <div style="width: 100%; text-align: right; max-width: 700px; margin: 0 auto;">
+      <button id="back-to-language-btn">🔁 Languages </button>
+    </div>
+
+      <div class="timer-wrapper">
+        <div class="timer-block">
+          <div class="circle-container">
+            <svg class="progress-ring" width="140" height="140">
+              <g class="progress-group">
+                <circle class="ring-background" r="60" cx="70" cy="70" />
+                <circle class="ring-progress" r="60" cx="70" cy="70" />
+              </g>
+            </svg>
+            <div class="timer-number" id="timer-display">30</div>
+          </div>
+        </div>
+        <div class="button-block">
+          <button id="start-timer-btn">Start</button>
+        </div>
+      </div>
+
+    <div id="pairs-container"></div>
+    <button id="new-pairs-btn">Generate</button>
+
+  </div>
+  
+
+  
+
 
 <script>
   const professionsUA =  [
@@ -1505,15 +1692,6 @@ const modifiersSK = [
   "v miestnosti, kde je všetko prevrátené",
   "s dáždnikom, ktorý sa stále otvára"
 ];
-// debug section XD
-console.log(professionsUA.length + ' is length of professionsUA' )
-console.log(modifiersUA.length + ' is length of modifiersUA' )
-console.log(professionsEN.length + ' is length of professionsEN' )
-console.log(modifiersEN.length + ' is length of modifiersEN' )
-console.log(professionsSK.length + ' is length of professionsSK' )
-console.log(modifiersSK.length + ' is length of modifiersSK' )
-
-
   const container = document.getElementById("pairs-container");
   const btn = document.getElementById("new-pairs-btn");
 
@@ -1534,7 +1712,6 @@ console.log(modifiersSK.length + ' is length of modifiersSK' )
   }
 
   function createLanguageBlock(profession, modifier, label) {
-  // Масив контрастних кольорів
   const colors = [
   "#D32F2F", // яскраво-червоний
   "#1976D2", // яскраво-синій
@@ -1559,14 +1736,11 @@ console.log(modifiersSK.length + ' is length of modifiersSK' )
   "#283593", // темно-синій
 ];
 
-
-  // Вибираємо випадковий колір
   const color = colors[Math.floor(Math.random() * colors.length)];
 
   const block = document.createElement("div");
   block.className = "language-block";
 
-  // Створюємо картки з кольором рамки і тексту
   const professionCard = createCard(profession);
   professionCard.style.borderColor = color;
   professionCard.style.color = color;
@@ -1582,7 +1756,6 @@ console.log(modifiersSK.length + ' is length of modifiersSK' )
   langLabel.className = "language-label";
   langLabel.textContent = label;
   langLabel.style.color = color;
-  //langLabel.style.fontWeight = "bold";
   block.appendChild(langLabel);
 
   return block;
@@ -1594,16 +1767,21 @@ console.log(modifiersSK.length + ' is length of modifiersSK' )
 
     const indexesProf = generateIndexes(professionsUA);
     const indexesModifiers = generateIndexes(modifiersUA);
-
       const row = document.createElement("div");
       row.className = "pair-row";
-
-      row.appendChild(createLanguageBlock(professionsUA[indexesProf], modifiersUA[indexesModifiers], "Українська"));
-      row.appendChild(createLanguageBlock(professionsEN[indexesProf], modifiersEN[indexesModifiers], "English"));
-      row.appendChild(createLanguageBlock(professionsSK[indexesProf], modifiersSK[indexesModifiers], "Slovenský"));
+      selectedLanguages.forEach(lang => {
+        if (lang === 'ua') {
+          row.appendChild(createLanguageBlock(professionsUA[indexesProf], modifiersUA[indexesModifiers], "Українська"));
+        }
+        if (lang === 'en') {
+          row.appendChild(createLanguageBlock(professionsEN[indexesProf], modifiersEN[indexesModifiers], "English"));
+        }
+        if (lang === 'sk') {
+          row.appendChild(createLanguageBlock(professionsSK[indexesProf], modifiersSK[indexesModifiers], "Slovenský"));
+        }
+      });
 
       container.appendChild(row);
-
     requestAnimationFrame(() => {
       container.style.animation = "none";
       container.offsetHeight;
@@ -1613,7 +1791,102 @@ console.log(modifiersSK.length + ' is length of modifiersSK' )
 
   btn.addEventListener("click", renderPairs);
 
+  let selectedLanguages = [];
+
+document.querySelectorAll('.lang-flag').forEach(flag => {
+  flag.addEventListener('click', () => {
+    const lang = flag.dataset.lang;
+    flag.classList.toggle('selected');
+
+    if (flag.classList.contains('selected')) {
+      selectedLanguages.push(lang);
+    } else {
+      selectedLanguages = selectedLanguages.filter(l => l !== lang);
+    }
+
+    // Заборонити 0 вибраних мов
+    document.getElementById('start-app-btn').disabled = selectedLanguages.length === 0;
+  });
+});
+
+document.getElementById('start-app-btn').addEventListener('click', () => {
+  // Показати основну частину
+  document.getElementById('language-selection').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  renderPairs(); // запускаємо перше відображення
+});
+
+
   renderPairs();
+  // timer block
+
+const timerDisplay = document.getElementById("timer-display");
+const startBtn = document.getElementById("start-timer-btn");
+const ringProgress = document.querySelector(".ring-progress");
+
+const radius = 60;
+const circumference = 2 * Math.PI * radius;
+
+ringProgress.style.strokeDasharray = `${circumference}`;
+ringProgress.style.strokeDashoffset = `0`;
+
+let timerInterval = null;
+let isRunning = false;
+
+function setProgress(percent) {
+  const offset = (percent / 100) * circumference;
+  ringProgress.style.strokeDashoffset = offset;
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  ringProgress.style.transition = "none";
+  setProgress(0);
+  timerDisplay.textContent = "30";
+  isRunning = false;
+}
+
+startBtn.addEventListener("click", () => {
+  if (isRunning) return; // Не запускаємо повторно
+
+  isRunning = true;
+  let timeLeft = 30;
+
+  timerDisplay.textContent = timeLeft;
+  setProgress(0);
+
+  // Запускаємо плавну анімацію
+  requestAnimationFrame(() => {
+    ringProgress.style.transition = 'stroke-dashoffset 30s linear';
+    setProgress(100);
+  });
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      resetTimer();
+    }
+  }, 1000);
+});
+
+document.getElementById("back-to-language-btn").addEventListener("click", () => {
+  // Повертаємося на вибір мов
+  document.getElementById("main-app").style.display = "none";
+  document.getElementById("language-selection").style.display = "flex";
+
+  // Скидаємо вибір мов
+  selectedLanguages = [];
+  document.querySelectorAll(".lang-flag").forEach(flag => flag.classList.remove("selected"));
+  document.getElementById("start-app-btn").disabled = true;
+
+  // Очистити попередні пари (опційно)
+  document.getElementById("pairs-container").innerHTML = "";
+});
+
+////////////////////
+
 </script>
 
 </body>
