@@ -12,10 +12,13 @@
     padding: 0;
   }
   body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* вертикальне центрування */
-    align-items: center; /* горизонтальне центрування */
+    display: block;
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 20px 10px;
+    overflow-x: hidden;
     font-family: Arial, sans-serif;
     background: #f0f2f5;
     min-height: 100vh;
@@ -31,7 +34,9 @@
   }
 
   #pairs-container {
-    background: #fff;
+    margin-left: auto;
+    margin-right: auto;
+background: #fff;
     border-radius: 8px;
     padding: 20px 15px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.12);
@@ -177,6 +182,21 @@
 #start-timer-btn:hover {
   background-color: #218838;
 }
+#reset-timer-btn {
+  padding: 16px 24px;
+  font-size: 18px;
+  background-color: #8b11bb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 110px;
+  min-height: 50px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+#reset-timer-btn:hover {
+  background-color: #590b79;
+}
 
 
 #language-selection {
@@ -235,6 +255,12 @@
   background-color: #e2e6ea;
 }
 
+#new-pairs-btn{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
   @keyframes fadeInUp {
     to {
@@ -266,23 +292,26 @@
 <body>
 
   <div id="language-selection">
-    <h2>Select languages</h2>
+    <h2>Select languages you want to be displayed in the game</h2>
     <div class="language-options">
       <div class="lang-flag" data-lang="ua" title="Українська">🇺🇦</div>
       <div class="lang-flag" data-lang="en" title="English">🇬🇧</div>
       <div class="lang-flag" data-lang="sk" title="Slovenský">🇸🇰</div>
     </div>
-    <button id="start-app-btn" disabled>Let's go</button>
+    <button id="start-app-btn" disabled>Почати</button>
   </div>
   
   <!-- Далі буде основна частина сайту -->
   <div id="main-app" style="display: none;">
 
     <div style="width: 100%; text-align: right; max-width: 700px; margin: 0 auto;">
-      <button id="back-to-language-btn">🔁 Languages change</button>
+      <button id="back-to-language-btn">🔁 Languages </button>
     </div>
 
       <div class="timer-wrapper">
+        <div class="button-block">
+          <button id="reset-timer-btn">Reset</button>
+        </div>
         <div class="timer-block">
           <div class="circle-container">
             <svg class="progress-ring" width="140" height="140">
@@ -1819,9 +1848,10 @@ document.getElementById('start-app-btn').addEventListener('click', () => {
 
   renderPairs();
   // timer block
-
-const timerDisplay = document.getElementById("timer-display");
+  const timerDisplay = document.getElementById("timer-display");
 const startBtn = document.getElementById("start-timer-btn");
+const resetBtn = document.getElementById("reset-timer-btn");
+const backBtn = document.getElementById("back-to-language-btn");
 const ringProgress = document.querySelector(".ring-progress");
 
 const radius = 60;
@@ -1847,7 +1877,7 @@ function resetTimer() {
 }
 
 startBtn.addEventListener("click", () => {
-  if (isRunning) return; // Не запускаємо повторно
+  if (isRunning) return;
 
   isRunning = true;
   let timeLeft = 30;
@@ -1855,7 +1885,6 @@ startBtn.addEventListener("click", () => {
   timerDisplay.textContent = timeLeft;
   setProgress(0);
 
-  // Запускаємо плавну анімацію
   requestAnimationFrame(() => {
     ringProgress.style.transition = 'stroke-dashoffset 30s linear';
     setProgress(100);
@@ -1870,6 +1899,23 @@ startBtn.addEventListener("click", () => {
     }
   }, 1000);
 });
+
+resetBtn.addEventListener("click", () => {
+  resetTimer();
+});
+
+backBtn.addEventListener("click", () => {
+  document.getElementById("main-app").style.display = "none";
+  document.getElementById("language-selection").style.display = "flex";
+
+  selectedLanguages = [];
+  document.querySelectorAll(".lang-flag").forEach(flag => flag.classList.remove("selected"));
+  document.getElementById("start-app-btn").disabled = true;
+  document.getElementById("pairs-container").innerHTML = "";
+
+  resetTimer();
+});
+
 
 document.getElementById("back-to-language-btn").addEventListener("click", () => {
   // Повертаємося на вибір мов
