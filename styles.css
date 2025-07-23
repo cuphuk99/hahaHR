@@ -85,6 +85,7 @@ background: #fff;
     color: white;
     cursor: pointer;
     margin-top: 20px;
+    margin-bottom: 20px;
     transition: background-color 0.25s ease;
     user-select: none;
   }
