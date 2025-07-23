@@ -1,3 +1,7 @@
+window.addEventListener('load', () => {
+    document.getElementById("time-up-overlay").classList.remove("show");
+  });
+  
 const container = document.getElementById("pairs-container");
   const btn = document.getElementById("new-pairs-btn");
 
@@ -151,6 +155,7 @@ function resetTimer() {
   setProgress(0);
   timerDisplay.textContent = "30";
   isRunning = false;
+  document.getElementById("time-up-overlay").classList.remove("show");
 }
 function showTimeUpOverlay() {
   const overlay = document.getElementById("time-up-overlay");
